@@ -8,7 +8,7 @@
 SIZE=500000
 
 date=`date +"%Y-%m-%d_%H.%M.%S"`
-mkdir -p /mnt/$date
+mkdir -p /tmp/mnt/$date
 
 umount $1
 
@@ -16,26 +16,27 @@ i=0
 dmesg -c 2>&1 1> /dev/null
 
 while [ TRUE ];do
-	echo . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+	echo "======================================================="
 	echo $i-`date +"%Y-%m-%d_%H.%M.%S"`
-	let i++
-	mount $1 /mnt/$date
+	i=`expr $i + 1`
+	mount $1 /tmp/mnt/$date
 	if [ $? != 0 ];then
 		exit 1
 	fi
 	echo HOST to USB:
-	dd if=/dev/zero of=/mnt/$date/file bs=1024 count=$SIZE
+	dd if=/dev/zero of=/tmp/mnt/$date/file bs=1024 count=$SIZE
 	sync
 	umount $1
-	mount $1 /mnt/$date
+	mount $1 /tmp/mnt/$date
 	if [ $? != 0 ];then
 		exit 1
 	fi
  
 	echo USB to HOST:
-	dd if=/mnt/$date/file of=/dev/null bs=1024
-	rm -rf /mnt/$date/file
+	dd if=/tmp/mnt/$date/file of=/dev/null bs=1024
+	rm -rf /tmp/mnt/$date/file
 	umount $1
 
+	echo "== kernel message =="
 	dmesg -c
 done
