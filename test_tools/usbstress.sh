@@ -1,11 +1,15 @@
 #!/bin/sh
-# Peter Senna Tschudin - peter.senna AT gmail.com - 29/10/2008
+# Origin from Peter Senna Tschudin - peter.senna AT gmail.com - 29/10/2008
+# Origin source: https://github.com/petersenna/linux_stuff/tree/master/USB_Storage_Stress_Test
 # This is useful to test USB stability.
 # ./usbstress.sh /dev/sdc1 <- replace sdc1 with your usb storage device
-# from https://github.com/petersenna/linux_stuff/tree/master/USB_Storage_Stress_Test
+# SIZE=10000 ./usbstress.sh /dev/sdc1 <- change test size to 10000KB
 
 # SIZE * 1024
-SIZE=500000
+# default SIZE is 50000 KB
+if [ -z "$SIZE" ]; then
+        SIZE=50000
+fi
 
 date=`date +"%Y-%m-%d_%H.%M.%S"`
 mkdir -p /tmp/mnt/$date
